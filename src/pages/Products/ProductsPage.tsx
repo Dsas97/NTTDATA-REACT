@@ -52,12 +52,10 @@ export const ProductsPage: React.FC<ProductsProps> = () => {
 	}, [notification, setNotification]);
 
 	useEffect(() => {
-		if (productList.length > 0) {
-			const timer = setTimeout(() => {
-				setLoading(false);
-			}, 1000);
-			return () => clearTimeout(timer);
-		}
+		const timer = setTimeout(() => {
+			setLoading(false);
+		}, 1000);
+		return () => clearTimeout(timer);
 	}, [productList]);
 
 	return (

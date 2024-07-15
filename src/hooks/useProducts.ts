@@ -38,6 +38,7 @@ export const useProducts = () => {
             });
         } catch (error) {
             handleApiError(error);
+            setNotification('Error interno del servidor. Por favor, inténtelo de nuevo más tarde.');
         }
     };
 
@@ -59,16 +60,26 @@ export const useProducts = () => {
             handlerCloseForm();
             navigate('/products');
         } catch (error: any) {
-            if (error.response && error.response.status === 400) {
-                const errorResponse: ErrorTypeResponse = error.response.data;
-                const formattedErrors: { [key: string]: string } = {};
-                errorResponse.errors.forEach((err) => {
-                    formattedErrors[err.property] = Object.values(err.constraints)[0];
-                });
-                setNotification('Error al procesar la solicitud ' + error);
-                setErrors(formattedErrors);
+            if (error.response) {
+                if (error.response.status === 400) {
+                    const errorResponse: ErrorTypeResponse = error.response.data;
+                    const formattedErrors: { [key: string]: string } = {};
+                    errorResponse.errors.forEach((err) => {
+                        formattedErrors[err.property] = Object.values(err.constraints)[0];
+                    });
+                    setNotification('Error al procesar la solicitud: ' + error);
+                    setErrors(formattedErrors);
+                } else if (error.response.status === 500) {
+                    setNotification('Error interno del servidor. Por favor, inténtelo de nuevo más tarde.');
+                    navigate('/products');
+                } else {
+                    setNotification('Error al procesar la solicitud: ' + error);
+                    navigate('/products');
+                    throw error;
+                }
             } else {
-                setNotification('Error al procesar la solicitud ' + error);
+                setNotification('Error al procesar la solicitud: ' + error);
+                navigate('/products');
                 throw error;
             }
         }
