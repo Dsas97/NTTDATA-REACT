@@ -10,9 +10,6 @@ Make sure you have Node.js and Yarn installed on your machine.
 
 First, install the project dependencies. In the project directory, run:
 
-sh
-Copiar código
-
 ### yarn install
 
 ## Available Scripts
